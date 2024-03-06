@@ -1,0 +1,15 @@
+.label {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 39px;
+  color: #1A1919;
+  text-align: center;
+}
+
+@media screen and (width < 450px) {
+
+  .label {
+    font-size: 23px;
+  }
+
+}

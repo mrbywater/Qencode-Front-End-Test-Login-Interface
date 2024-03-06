@@ -1,0 +1,31 @@
+$blue : #316FEA;
+$text-black : #060E1E;
+$border-grey: #D3D8DC;
+
+.mainLoginInterfaceContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  min-height: 600px;
+}
+
+.logo {
+  margin-bottom: 80px;
+}
+
+.screensContainer {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media screen and (width < 450px) {
+
+  .screensContainer {
+    width: 90%;
+  }
+
+}

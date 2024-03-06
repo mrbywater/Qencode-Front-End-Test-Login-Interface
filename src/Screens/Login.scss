@@ -1,0 +1,123 @@
+@import '../App.scss';
+
+.fastLoginContainer {
+  height: 48px;
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.fastLoginContainer > div {
+  width: 192px;
+  height: 48px;
+  border: 1.2px solid $border-grey;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.fastLoginContainer > div > span {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  margin-left: 10px;
+  color: $text-black;
+}
+
+.separatorOR {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #BEC5CC;
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.separatorOR::before,
+.separatorOR::after {
+  content: "";
+  flex: 1;
+  border: 1px solid #E3E6E9;
+}
+
+.separatorOR::before {
+  margin-right: 5px;
+}
+
+.separatorOR::after {
+  margin-left: 5px;
+}
+
+.singUpMessage {
+  margin-top: 20px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.singUpMessage > span:first-child {
+  color: #383838;
+  letter-spacing: 0.2px;
+}
+
+.singUpMessage > span:last-child {
+  color: $blue;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.inputContainer {
+  margin-top: 5px;
+}
+
+.forgotPasswordTitle {
+  width: 100%;
+  margin-top: 15px;
+  text-align: end;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.forgotPasswordLink {
+  text-decoration: none;
+  color: $blue;
+}
+
+.passwordError {
+  position: absolute;
+  font-size: 10px;
+  color: red;
+  top: 10px;
+  left: 0;
+}
+
+.showPasswordContainer {
+  display: none;
+  transform: translateY(-20%);
+  animation: passwordBlock 1s forwards;
+  width: 100%;
+}
+
+@keyframes passwordBlock {
+  0% {
+    transform: translateY(-20%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@media screen and (width < 450px) {
+
+  .fastLoginContainer > div {
+    width: 48%;
+  }
+
+}
+
