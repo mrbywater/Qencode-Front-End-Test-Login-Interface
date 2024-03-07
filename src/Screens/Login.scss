@@ -97,6 +97,20 @@
   left: 0;
 }
 
+.emailErrorContainer {
+  width: 100%;
+  position: relative;
+}
+
+.errorEmail {
+  position: absolute;
+  font-size: 9px;
+  color: red;
+  top: 15px;
+  left: 0;
+  text-align: center;
+}
+
 .showPasswordContainer {
   display: none;
   transform: translateY(-20%);
@@ -117,6 +131,10 @@
 
   .fastLoginContainer > div {
     width: 48%;
+  }
+
+  .errorEmail {
+    top: 5px
   }
 
 }

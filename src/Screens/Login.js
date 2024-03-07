@@ -11,46 +11,45 @@ export const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".
 const Login = () => {
 
     const [emailValue, setEmailValue] = useState('')
-    const [isEmailValid, setIsEmailValid] = useState(false)
     const [passwordValue, setPasswordValue] = useState('')
-    const [passwordError, setPasswordError] = useState(false)
+    const [error, setError] = useState('')
+    const [errorType, setErrorType] = useState('')
 
     const authenticationHandler = () => {
-        passwordValue.length < 8 ? setPasswordError(true) : setPasswordError(false)
-
-        if (isEmailValid && passwordValue.length >= 8) {
-            authenticationApiAxios.post('/v1/auth/login', {
-                email: emailValue,
-                password: passwordValue
+        authenticationApiAxios.post('/v1/auth/login', {
+            email: emailValue,
+            password: passwordValue
+        })
+            .then(function (res) {
+                if (!!res.response.data.detail[0].error) {
+                    setError(res.response.data.detail[0].error)
+                    setErrorType(res.response.data.detail[0].field_name)
+                } else if (EMAIL_REGEXP.test(emailValue) && passwordValue.length >= 5) {
+                    alert('Successful login')
+                    setEmailValue('')
+                    setPasswordValue('')
+                }
             })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     useEffect(() => {
-        if (!emailValue) {
-            setPasswordError(false)
+
+        if (!EMAIL_REGEXP.test(emailValue)) {
             setPasswordValue('')
         }
 
-        setIsEmailValid(EMAIL_REGEXP.test(emailValue))
-
-        return ()=> setPasswordError(false)
-
-    }, [emailValue])
-
-    useEffect(() => {
-
-        if ( passwordValue.length >= 8) {
-            setPasswordError(false)
+        if (EMAIL_REGEXP.test(emailValue) && errorType === 'email') {
+            setError('')
         }
 
-    }, [passwordValue])
+        if (passwordValue.length >= 5 && errorType === 'password') {
+            setError('')
+        }
+
+    }, [emailValue, passwordValue])
 
     return (
         <>
@@ -75,17 +74,24 @@ const Login = () => {
                 </div>
             </div>
             <div className='separatorOR'>OR</div>
-            <Input
-                placeholder='Work email'
-                margin={{marginTop: '30px'}}
-                inputType='email'
-                setValue={setEmailValue}
-                value={emailValue}
-            />
-            <div className='showPasswordContainer' style={isEmailValid ? {display: 'block'} : {}}>
-                {passwordError &&
+            <div  className='emailErrorContainer'>
+                {emailValue && errorType === 'email' &&
+                    <span className='errorEmail'>
+                        {error}
+                    </span>
+                }
+                <Input
+                    placeholder='Work email'
+                    margin={{marginTop: '30px'}}
+                    inputType='email'
+                    setValue={setEmailValue}
+                    value={emailValue}
+                />
+            </div>
+            <div className='showPasswordContainer' style={(EMAIL_REGEXP.test(emailValue)) ? {display: 'block'} : {}}>
+                {passwordValue && errorType === 'password' &&
                     <span className='passwordError'>
-                        Your password is too short
+                        {error}
                     </span>
                 }
                 <Input

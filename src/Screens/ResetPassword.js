@@ -12,43 +12,27 @@ const ResetPassword = () => {
 
     const [passwordValue, setPasswordValue] = useState('')
     const [confirmPasswordValue, setConfirmPasswordValue] = useState('')
-    const [passwordsSame, setPasswordsSame] = useState(true)
-    const [passwordTooShort, setPasswordTooShort] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
     const handleInputChange = () => {
-
-        passwordValue === confirmPasswordValue ? setPasswordsSame(true) : setPasswordsSame(false)
-        passwordValue.length < 8 ? setPasswordTooShort(true) : setPasswordTooShort(false)
-
-        if (passwordValue === confirmPasswordValue && passwordValue.length >= 8) {
-            navigate('/');
-
-            authenticationApiAxios.post('/v1/auth/password-set', {
-                token: "string",
-                secret: "string",
-                password: passwordValue,
-                password_confirm: confirmPasswordValue
+        authenticationApiAxios.post('/v1/auth/password-set', {
+            token: "string",
+            secret: "string",
+            password: passwordValue,
+            password_confirm: confirmPasswordValue
+        })
+            .then(function (res) {
+                if (!!res.response.data.detail[0].error) {
+                    setErrorMessage(res.response.data.detail[0].error)
+                } else if (passwordValue === confirmPasswordValue) {
+                    alert('Password reset successfully')
+                    navigate('/');
+                }
             })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
+            .catch(function (error) {
+                console.log(error);
+            });
     }
-
-    useEffect(() => {
-
-        if (passwordValue.length >= 8) {
-            setPasswordTooShort(false)
-        }
-
-        if (passwordValue === confirmPasswordValue) {
-            setPasswordsSame(true)
-        }
-
-    }, [passwordValue, confirmPasswordValue])
 
     return (
         <>
@@ -56,11 +40,8 @@ const ResetPassword = () => {
                 title='Create new Password?'
             />
             <div className='inputsContainer'>
-                {!passwordsSame && !passwordTooShort &&
-                    <span className='passwordErrorReset'>Your passwords are not the same</span>
-                }
-                {passwordTooShort &&
-                    <span className='passwordErrorReset'>Your password is too short</span>
+                {errorMessage &&
+                    <span className='passwordErrorReset'>{errorMessage}</span>
                 }
                 <Input
                     placeholder='Password'

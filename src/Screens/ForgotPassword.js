@@ -2,57 +2,41 @@ import './ForgotPassword.scss'
 import {Label} from "../Components/Label";
 import {Input} from "../Components/Input";
 import {InteractionButton} from "../Components/InteractionButton";
-import {useEffect, useState} from "react";
-import {EMAIL_REGEXP} from "./Login";
+import {useState} from "react";
 import { useNavigate  } from "react-router-dom";
 import {authenticationApiAxios} from "../requests";
+import {EMAIL_REGEXP} from "./Login";
+
+const cancelButtonStyle = {
+    color: '#060E1E',
+    backgroundColor: '#FFFFFF',
+    marginTop: '20px',
+    border: '1.2px solid #D3D8DC',
+    letterSpacing: '-0.24%'
+}
 
 const ForgotPassword = () => {
 
     const navigate  = useNavigate();
 
-    const cancelButtonStyle = {
-        color: '#060E1E',
-        backgroundColor: '#FFFFFF',
-        marginTop: '20px',
-        border: '1.2px solid #D3D8DC',
-        letterSpacing: '-0.24%'
-    }
-
     const [emailValue, setEmailValue] = useState('')
-    const [isEmailValid, setIsEmailValid] = useState(false)
-    const [emailChecker, setEmailChecker] = useState(false)
-
-    useEffect(() => {
-
-        setIsEmailValid(EMAIL_REGEXP.test(emailValue))
-
-    }, [emailValue])
-
-    useEffect(() => {
-
-        setEmailChecker(false)
-
-    }, [isEmailValid])
+    const [emailError, setEmailError] = useState('')
 
     const handleInputChange = () => {
-        if (isEmailValid) {
-            navigate('/reset_password');
-        } else {
-            setEmailChecker(true)
-        }
-
-        if (isEmailValid) {
-            authenticationApiAxios.post('/v1/auth/password-reset', {
-                email: emailValue
+        authenticationApiAxios.post('/v1/auth/password-reset', {
+            email: emailValue
+        })
+            .then(function (res) {
+                if (!!res.response.data.detail[0].error) {
+                    setEmailError(res.response.data.detail[0].error)
+                } else if (EMAIL_REGEXP.test(emailValue)) {
+                    alert(`Please check your email ${emailValue} to complete the password reset`)
+                    navigate('/reset_password')
+                }
             })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const cancelButtonHandler = () => navigate('/')
@@ -63,8 +47,8 @@ const ForgotPassword = () => {
                 title='Forgot Password?'
             />
             <div className='emailContainer'>
-                {emailChecker &&
-                    <span className='emailError'>Your email is not correct</span>
+                {emailError &&
+                    <span className='emailError'>{emailError}</span>
                 }
                 <Input
                     placeholder='Enter your email'
