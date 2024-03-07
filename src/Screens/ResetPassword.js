@@ -3,7 +3,7 @@ import {Label} from "../Components/Label";
 import {Input} from "../Components/Input";
 import {InteractionButton} from "../Components/InteractionButton";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {authenticationApiAxios} from "../requests";
 
 const ResetPassword = () => {
